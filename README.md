@@ -1,47 +1,54 @@
-# Virtual HR Manager
+🚀 Virtual HR Manager – Backend (Flask) with venv Setup
 
-# Run locally
+Overview
+This project is the backend (Flask API) for the Virtual HR Manager, built in Python. It features a simple chat-based interview system powered by Google Generative AI. All environment and dependency management is handled through a project-local virtual environment (venv), ensuring clean and reproducible installs.
 
-## Dependencies
+Features
+Flask-based REST API for chat sessions ([GET]/chat/get-init-message, [POST]/chat/send-message).
+CORS support to allow connections from frontend or other domains.
+Google Generative AI model integration for real-time conversational logic.
+.env management for secure API keys and secrets.
 
-- python
-- react.js
+Backend Setup: Complete Guide (with venv)
 
-## Python dependencies
+1. Prerequisites
+Python 3.8+
+Internet connection (for installing packages)
+Access to a Google Generative AI API key
 
-```cmd
-pip install flask
-pip install flask-cors
-pip install -q -U google-generativeai
-```
+2. Quickstart Steps
 
-Get Gemini API key from [here](https://aistudio.google.com/app/apikey)
-set environment variable GOOGLE_API_KEY to your api key
-either via command or create `.env` in `Backend` folder and put
-```
-GOOGLE_API_KEY=your_api_key
-```
+a. Clone the Repository
+git clone https://github.com/your-username/your-repository-name.git
+cd your-repository-name/Backend
 
-## react dependencies
+b. Create and Activate a Virtual Environment (venv)
+On Windows:
+python -m venv venv
+venv\Scripts\activate
+On macOS/Linux:
+python3 -m venv venv
+source venv/bin/activate
+You should see (venv) in your command prompt, indicating the virtual environment is active.
 
-you need to have node.js, npm and react-scripts
-and then run
-```
-npm install
-```
-to install dependencies
+c. Install Dependencies
+pip install -r requirements.txt
+# If requirements.txt is missing, install manually:
+pip install flask flask-cors python-dotenv google-generativeai
 
-## Run Backend server
+d. Environment Variables
 
-Run the flask backend server using
-```
-flask --app Backend/main run
-```
+e. Create a .env file in your backend directory:
+   GOOGLE_API_KEY=your-google-api-key-here
 
-## Run frontend server
+f. Run the Flask Server
+   python main.py
+   The server will start on http://0.0.0.0:5000. You can test using tools like Postman or directly from your frontend.
 
-Run the react project using
-```
-cd Frontend
-npm start
-```
+
+
+Notes & Recommendations
+Always activate your venv before running or installing anything!
+Do not commit the venv folder or .env file to git (add them to .gitignore).
+After running, deactivate your venv any time with the deactivate command.
+To upgrade dependencies, run pip install --upgrade ... inside your virtual environment.
