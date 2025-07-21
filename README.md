@@ -1,4 +1,4 @@
-🚀 Virtual HR Manager – Backend (Flask) with venv Setup
+🚀 Virtual Interview
 
 Overview
 This project is the backend (Flask API) for the Virtual HR Manager, built in Python. It features a simple chat-based interview system powered by Google Generative AI. All environment and dependency management is handled through a project-local virtual environment (venv), ensuring clean and reproducible installs.
