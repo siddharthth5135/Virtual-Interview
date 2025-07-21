@@ -1,44 +1,62 @@
 from flask import Flask, request
-from flask_cors import CORS, cross_origin
-import google.generativeai as genai
+from flask_cors import CORS
+import google.generativeai as genaiz  # Correct import
 import os
-
 from dotenv import load_dotenv
-load_dotenv()
 
+# Load environment variables
+load_dotenv()
 
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 
-genai.configure(api_key=GOOGLE_API_KEY)
+# Configure the API
+genaiz.configure(api_key=GOOGLE_API_KEY)  # Use the correct alias
 
-model = genai.GenerativeModel('gemini-pro')
-
+# Initialize the Generative Model with an available model (updated from "models/gemini-pro")
+# model = genaiz.GenerativeModel(model_name="models/gemini-1.5-pro")
+model = genaiz.GenerativeModel(model_name="models/gemini-2.0-flash")
 chat = model.start_chat(history=[])
 
+# Initialize Flask app
 app = Flask(__name__)
-cors = CORS(app)
+cors = CORS(app, resources={r"/chat/*": {"origins": "*"}})  # Explicitly allow all origins for chat routes
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 chat_name = "Jonathan"
-init_message = f"*You are an HR manager skilled at evaluting employees and asking interview questions, first introduce yourself in a short way as a Virtual HR Manager with just the name {chat_name} only, you are taking interview of the user applying for a software engineering job, ask user for introduction. Keep your responses short and DO NOT put system text surrouned by ** in the response.*"
+field_name = "PHP Developer"
+
+# Initial interview message
+init_message = (
+    f"*You are an HR manager skilled at evaluating employees and asking interview questions. "
+    f"First, introduce yourself as {chat_name}, a Virtual HR Manager, conducting an interview "
+    f"for a {field_name} job. Ask the user for an introduction. Keep responses short and avoid using system text.*"
+)
 
 @app.route("/chat/get-init-message", methods=['GET'])
 def chat_get_init_message():
-    chat.history.clear()
+    chat.history.clear()  # Clear chat history
     return chat.send_message(init_message).text
-    
+
 @app.route("/chat/send-message", methods=['POST'])
 def chat_send_message():
     message = request.form['message']
     ended = False
+
+    # Adjust message based on interview progress
     if len(chat.history) < 5:
-        message += " *Give a short feedback to the answer in a few words and then ask the next interview question"
-    elif len(chat.history) < 10:
-        message += " *if the previous question was a technical question then check if the given answer is correct and ask the next technical question"
+        message += " *Give short feedback and ask the next interview question.*"
+    elif len(chat.history) < 13:
+        message += " *If it was a technical question, evaluate the answer and ask another technical question.*"
     else:
-        message += " *Interview has ended, send a closing message"
+        message += " *Interview has ended. Send a closing message and state whether the candidate is accepted or rejected for the next round.*"
         ended = True
+
+    # Send response message and status
     return {
         "message": chat.send_message(message).text,
         "ended": ended,
-    } 
+    }
+
+# Run the app
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0", port=5000)  # Ensure the server is accessible
